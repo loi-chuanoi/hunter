@@ -23,7 +23,7 @@ var js_Hunter = function(_config){
                 type: "POST",
                 data:_data
             }).done(function (data) {
-                
+
                 console.log(data);
             });
         }
