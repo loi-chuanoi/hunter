@@ -6,3 +6,4 @@ Hunter autocompleted libs
     
     pkg require huynguyen/hunter
     
+    new js_Hunter({target:"[#element]",remote:"[url]"}
