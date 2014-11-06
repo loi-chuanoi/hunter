@@ -16,7 +16,7 @@ var js_Hunter = function (_config) {
             return;
         }
         if ("undefined" == typeof(_c.sync_data)) {
-            _c.sync_data = [];
+            _c.sync_data = {};
         }
         if ("undefined" == typeof(_c.keys_history)) {
             _c.keys_history = [];
@@ -34,6 +34,7 @@ var js_Hunter = function (_config) {
       $(_config.target).parent().find(".dropdown-menu").first().html(html);
     }
     load_Storage();
+
     if ("undefined" == typeof (_config.target)) {
         throw new Error("Hunterjs require target element");
     } else {
@@ -55,18 +56,17 @@ var js_Hunter = function (_config) {
             $.ajax({
                 url: _config.remote,
                 cache: false,
-                async: false,
+                async: true,
                 type: "POST",
                 data: {"key":_data}
             }).done(function (data) {
                 js_Hunter.is_syncing = false;
                 if ("undefined" == typeof(_config.sync_data)) {
-                    _config.sync_data = [];
+                    _config.sync_data = {};
                 }
-                if (_config.sync_data.length >= 1000) {
-                    _config.sync_data = _config.sync_data.slice(0, 1000);
-                }
-                _config.sync_data["k_" + _data] = data
+                var kname  = "k_" + _data;
+                _config.sync_data[kname] = data;
+                console.log(_config);
                 save_Storage();
                 if("function" == typeof(_itemready)){
                     _itemready(data);
@@ -114,7 +114,7 @@ js_Hunter.update = function(target){
         return;
     }
     _c.keys_history = [];
-    _c.sync_data = [];
+    _c.sync_data = {};
     localStorage.setItem("js_Hunter" + target, JSON.stringify(_c));
     var html='<li role="presentation"><a role="menuitem" onclick="js_Hunter.update(\'' + target+'\')"><i class="fa fa-refresh sp-c5"></i>Cập nhật</a>';
     $(target).parent().find(".dropdown-menu").first().html(html);
