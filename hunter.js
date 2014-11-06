@@ -25,7 +25,7 @@ var js_Hunter = function (_config) {
     var init_dropdowns = function(){
         var html="";
         for(var i in _config.keys_history){
-          html += '<li role="presentation"><a role="menuitem" tabindex="-1">' + _config.keys_history[i] + '</a>\
+          html += '<li role="presentation"><a role="menuitem" onclick="$(\'' + _config.target + '\').val(' +_config.keys_history[i]  + ')" tabindex="-1">' + _config.keys_history[i] + '</a>\
             </li>';
         }
       $(_config.target).parent().find(".dropdown-menu").first().html(html);
@@ -65,10 +65,13 @@ var js_Hunter = function (_config) {
                     _config.sync_data = _config.sync_data.slice(0, 1000);
                 }
                 _config.sync_data["k_" + _data] = data
+                save_Storage();
+                if("undefined" != typeof (this.onitemready)){
+                    this.onitemready(data);
+                }
             }).error(function () {
                 js_Hunter.is_syncing = false;
             });
-            save_Storage();
         }
     };
     this.getConfig = function () {
@@ -95,5 +98,13 @@ var js_Hunter = function (_config) {
     var push = function (value) {
 
     };
-    var read
+    this.readSugget = function(max_item){
+        if("undefined" == typeof(max_item)){
+            max_item = 10;
+        }
+
+    };
+    this.onitemready = function(item){
+
+    }
 }
