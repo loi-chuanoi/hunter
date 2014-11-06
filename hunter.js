@@ -26,14 +26,13 @@ var js_Hunter = function (_config) {
         init_dropdowns();
     }
     var init_dropdowns = function(){
-        var html="";
+        var html='<li role="presentation"><a role="menuitem" onclick="js_Hunter.update(\'' + _config.target+'\')"><i class="fa fa-refresh sp-c5"></i>Cập nhật</a>';
         for(var i in _config.keys_history){
-          html += '<li role="presentation"><a role="menuitem" onclick="$(\'' + _config.target + '\').val(' +_config.keys_history[i]  + ')" tabindex="-1">' + _config.keys_history[i] + '</a>\
+          html += '<li role="presentation"><a role="menuitem" onclick="$(\'' + _config.target + '\').val(\'' +_config.keys_history[i]  + '\')" tabindex="-1">' + _config.keys_history[i] + '</a>\
             </li>';
         }
       $(_config.target).parent().find(".dropdown-menu").first().html(html);
     }
-
     load_Storage();
     if ("undefined" == typeof (_config.target)) {
         throw new Error("Hunterjs require target element");
@@ -58,7 +57,7 @@ var js_Hunter = function (_config) {
                 cache: false,
                 async: false,
                 type: "POST",
-                data: _data
+                data: {"key":_data}
             }).done(function (data) {
                 js_Hunter.is_syncing = false;
                 if ("undefined" == typeof(_config.sync_data)) {
@@ -108,4 +107,15 @@ var js_Hunter = function (_config) {
 
     };
 
+}
+js_Hunter.update = function(target){
+    var _c = JSON.parse(localStorage.getItem("js_Hunter" + target));
+    if("undefined" == typeof (_c) || !_c ){
+        return;
+    }
+    _c.keys_history = [];
+    _c.sync_data = [];
+    localStorage.setItem("js_Hunter" + target, JSON.stringify(_c));
+    var html='<li role="presentation"><a role="menuitem" onclick="js_Hunter.update(\'' + target+'\')"><i class="fa fa-refresh sp-c5"></i>Cập nhật</a>';
+    $(target).parent().find(".dropdown-menu").first().html(html);
 }
