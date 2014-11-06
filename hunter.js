@@ -6,7 +6,10 @@
 if ("undefined" == typeof jQuery)throw new Error("Hunter requires jQuery > 1.9");
 var js_Hunter = function (_config) {
     var is_syncing = false;
-
+    var _itemready;
+    this.onitemready = function(func){
+        _itemready = func;
+    };
     var load_Storage = function () {
         var _c = JSON.parse(localStorage.getItem("js_Hunter" + _config.target));
         if("undefined" == typeof (_c) || !_c ){
@@ -66,8 +69,8 @@ var js_Hunter = function (_config) {
                 }
                 _config.sync_data["k_" + _data] = data
                 save_Storage();
-                if("undefined" != typeof (this.onitemready)){
-                    this.onitemready(data);
+                if("function" == typeof(_itemready)){
+                    _itemready(data);
                 }
             }).error(function () {
                 js_Hunter.is_syncing = false;
@@ -104,7 +107,5 @@ var js_Hunter = function (_config) {
         }
 
     };
-    this.onitemready = function(item){
 
-    }
 }
